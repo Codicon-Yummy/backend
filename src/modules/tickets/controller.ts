@@ -18,6 +18,9 @@ const ticketSchema = z.object({
 export const createTicket = async (req: Request, res: Response) => {
   // const { initialContext } = req.body as ITicket;
 
+  // lewis castillo
+  const userOne = '64ea3d4f4870ff7f457627d7';
+
   try {
     // const findTicket = await ticket.findOne({ email });
     // if (findUser) {
@@ -64,6 +67,32 @@ export const getTickets = async (req: Request, res: Response) => {
 
 export const updateTicket = async (req: Request, res: Response) => {
   try {
+    const { idTicket } = req.params;
+
+    const findUser = await Ticket.findOne({
+      number: Number(idTicket),
+    });
+
+    const ticketId = findUser?._id;
+
+    // const validatedData = ticketSchema.parse(req.body);
+    const chat = req.body;
+
+    // TODO: remove password from response
+    const updatedTicket = await Ticket.findByIdAndUpdate(ticketId, { ...chat }, { new: true });
+
+    res.status(200).json(updatedTicket);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ message: error.message, errors: error.errors });
+    }
+
+    res.status(500).json({ message: 'Something went wrong' });
+  }
+};
+
+export const updateChatByTicketNumber = async (req: Request, res: Response) => {
+  try {
     const { id } = req.params;
 
     const findUser = await Ticket.findById(id);
@@ -86,21 +115,18 @@ export const updateTicket = async (req: Request, res: Response) => {
   }
 };
 
-// export const deleteUser = async (req: Request, res: Response) => {
-//   try {
-//     const { id } = req.params;
-//     if (!mongoose.Types.ObjectId.isValid(id)) {
-//       return res.status(400).json({ message: 'Invalid ID' });
-//     }
+export const getChats = async (req: Request, res: Response) => {
+  try {
+    const { ticketNumber } = req.params;
+    const response = await Ticket.find();
 
-//     const deletedUser = await User.deleteOne({ _id: id });
+    const chats = response.filter((ticket) => ticket.chat.length > 0);
 
-//     if (deletedUser.deletedCount === 0) {
-//       return res.status(404).json({ message: 'User not found' });
-//     }
+    // const chatsFiltered = chats.filter((chat) => );
 
-//     res.status(204).json({ message: 'User deleted successfully' });
-//   } catch (error) {
-//     res.status(500).json({ message: 'Something went wrong' });
-//   }
-// };
+    res.status(200).json(chats);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ message: 'Something went wrong' });
+  }
+};

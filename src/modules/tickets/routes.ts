@@ -1,8 +1,6 @@
 import { Router } from 'express';
 
-// import { verifyJWT } from '../auth/middleware';
-import { validateObjectId } from '../utils';
-import { createTicket, getTicket, getTickets, updateTicket } from './controller';
+import { createTicket, getChats, getTicket, getTickets, updateTicket } from './controller';
 
 const router = Router();
 
@@ -12,6 +10,10 @@ router.get('/:id', getTicket);
 
 router.post('/', createTicket);
 
-router.put('/:id', validateObjectId, updateTicket);
+router.put('/:id', updateTicket);
+
+router.put('/:id/close', updateTicket);
+
+router.get('/:ticketNumber/chats', getChats);
 
 export default router;
