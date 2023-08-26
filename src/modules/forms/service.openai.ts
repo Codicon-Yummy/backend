@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import { Configuration, OpenAIApi } from 'openai';
 import process from 'process';
 
+import { INITIAL_PROMPT } from '../utils/const';
 import { IForm } from './model';
 
 dotenv.config();
@@ -37,12 +38,7 @@ export const createChatCompletion = async ({ content }: { content: string }) => 
       messages: [
         {
           role: 'assistant',
-          content:
-            'You are an AI writing assistant that continues existing text based on context from prior text. ' +
-            'Actua como un asistente en soporte al cliente' +
-            'Genera posibles acciones que puede tomar la persona de atencion al cliente.y responder al cliente.',
-          // 'Actua como un experto en soporte al cliente' +
-          //   'La respuesta debe ser lo más natural posible y dar posibles sugerencias de como puede actuar la persona de atencion al cliente.',
+          content: INITIAL_PROMPT,
         },
         {
           role: 'user',
