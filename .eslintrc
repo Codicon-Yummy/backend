@@ -1,0 +1,22 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "simple-import-sort", "prettier", "jest"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "no-console": "warn",
+    "prettier/prettier": 2,
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
+    "semi": ["error", "always"]
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "jest/globals": true
+  }
+}
