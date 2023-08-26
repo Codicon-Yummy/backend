@@ -10,6 +10,9 @@ export type IAuthLogin = Pick<IUser, 'email' | 'password'>;
 
 const UserSchema = new mongoose.Schema(
   {
+    name: {
+      type: String,
+    },
     email: {
       type: String,
       required: true,

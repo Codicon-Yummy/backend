@@ -13,6 +13,7 @@ export const USER_ROLES = {
 
 const userSchema = z.object({
   email: z.string().email(),
+  name: z.string(),
   password: z.string(),
   role: z.nativeEnum(USER_ROLES).default(USER_ROLES.USER),
 });

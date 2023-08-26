@@ -6,22 +6,22 @@ import { USER_ROLES } from '../users/controller';
 const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
   const token = req.header('x-token');
 
-  if (!token) {
-    return res.status(401).json({
-      success: false,
-      message: 'Access denied',
-    });
-  }
-
-  try {
-    res.locals.user = jwt.verify(token, process.env.JWT_SECRET!);
-    next();
-  } catch (err) {
-    return res.status(400).json({
-      success: false,
-      message: 'Invalid token',
-    });
-  }
+  // if (!token) {
+  //   return res.status(401).json({
+  //     success: false,
+  //     message: 'Access denied',
+  //   });
+  // }
+  //
+  // try {
+  //   res.locals.user = jwt.verify(token, process.env.JWT_SECRET!);
+  //   next();
+  // } catch (err) {
+  //   return res.status(400).json({
+  //     success: false,
+  //     message: 'Invalid token',
+  //   });
+  // }
 };
 
 export type UserRole = typeof USER_ROLES[keyof typeof USER_ROLES];
