@@ -1,16 +1,18 @@
 import dotenv from 'dotenv';
-// import { Configuration, OpenAIApi } from 'openai';
-import OpenAI from 'openai';
+import { Configuration, OpenAIApi } from 'openai';
 import process from 'process';
-
-dotenv.config();
-
-const openai = new OpenAI({
-  apiKey: process.env['OPENAI_API_KEY'],
-});
 
 import { INITIAL_PROMPT } from '../utils/const';
 import { IForm } from './model';
+
+dotenv.config();
+
+const configuration = new Configuration({
+  organization: process.env.OPEN_AI_ORGANIZATION!,
+  apiKey: process.env.OPEN_AI_API_KEY!,
+});
+
+const openai = new OpenAIApi(configuration);
 
 const DATA_DUMMY = {
   first_name: 'Juan',
@@ -30,10 +32,8 @@ export const createContent = (data: IForm) => {
 };
 
 export const createChatCompletion = async ({ content }: { content: string }) => {
-  // const completion = await openai.chat.completions.create({
-
-  return openai.chat.completions
-    .create({
+  return openai
+    .createChatCompletion({
       model: 'gpt-3.5-turbo',
       messages: [
         {
@@ -54,8 +54,7 @@ export const createChatCompletion = async ({ content }: { content: string }) => 
       n: 1,
     })
     .then((response) => {
-      console.log(response?.choices[0]?.message?.content);
-      return response?.choices[0]?.message?.content || '';
+      return response?.data?.choices[0]?.message?.content ?? '';
     })
     .catch((e) => {
       throw e;
