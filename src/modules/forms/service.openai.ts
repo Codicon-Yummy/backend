@@ -88,8 +88,11 @@ export const suggestChatCompletion = async (messages: Message[]) => {
       n: 1,
     })
     .then((response) => {
-      // console.log(response?.data?.choices[0]?.message?.content?.options);
-      return JSON.stringify(response?.data?.choices[0]?.message?.content) ?? '';
+      if (response?.data?.choices[0]?.message?.content) {
+        const responseJSON = JSON.parse(response?.data?.choices[0]?.message?.content);
+        return responseJSON;
+      }
+      return '';
     })
     .catch((e) => {
       throw e;

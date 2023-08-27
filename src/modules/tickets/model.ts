@@ -12,12 +12,42 @@ export type SuggestIA = {
   suggests: string[];
 };
 
+export type Chat = {
+  messages: Message[];
+  suggest: SuggestIA;
+};
+
 export interface ITicket extends mongoose.Document {
   initialContext: string;
   chat: { messages: Message[]; suggest: SuggestIA };
   status: 'open' | 'pending' | 'resolved';
   number: number;
 }
+
+const messageSchema = new mongoose.Schema(
+  {
+    senderBy: String,
+    content: String,
+    createAt: Date,
+  },
+  { _id: false },
+);
+
+const suggestIASchema = new mongoose.Schema(
+  {
+    options: [String],
+    suggests: [String],
+  },
+  { _id: false },
+);
+
+const chatSchema = new mongoose.Schema(
+  {
+    messages: [messageSchema],
+    suggest: [suggestIASchema],
+  },
+  { _id: false },
+);
 
 const TicketSchema = new mongoose.Schema(
   {
@@ -29,7 +59,7 @@ const TicketSchema = new mongoose.Schema(
       default: 'pending',
     },
     chat: {
-      type: Array<Message>,
+      type: chatSchema,
     },
     number: { type: Number, unique: true, default: 0 },
     reason: {

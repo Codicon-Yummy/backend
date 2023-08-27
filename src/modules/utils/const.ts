@@ -38,11 +38,11 @@ customerService: mensaje
 
 Ten encuenta las respuesta de cada rol para ofrecer una sugerencia.
 
-El formato de respuesta será un json que contemple 2 soluciones o respuestas acorde a los mensajes del cliente en menos de 60 caracteres, y una sugerencia de respuesta que esta alineada a los valores de la empresa, de esta forma:
+El formato de respuesta será un json que pueda aplicarle JSON.parser() que contemple 2 soluciones o respuestas acorde a los mensajes del cliente en menos de 60 caracteres, y una sugerencia de respuesta que esta alineada a los valores de la empresa, de esta forma:
 
 {
-options: [] ,
-suggests: []
+  "options": [] ,
+  "suggests": []
 }`;
 
 // const COMPLEMENT_PROMPT_SOLUTIONS = `Adicional, al momento de proponer solución ten encuenta las siguientes opciones según la gravedad del ticket

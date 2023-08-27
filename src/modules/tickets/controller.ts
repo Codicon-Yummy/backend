@@ -139,10 +139,10 @@ export const messageToUpdateTheTicket = async (req: Request, res: Response) => {
       content: content,
       createAt: new Date(),
     };
-    let newSuggests = current_ticket?.chat.suggest;
+    let newSuggests = current_ticket?.chat?.suggest;
 
     if (senderBy === 'client') {
-      if (current_ticket?.chat.messages) {
+      if (current_ticket?.chat?.messages) {
         const data = await suggestChatCompletion(current_ticket?.chat.messages);
         const dataFormated = JSON.parse(data);
         newSuggests = {
@@ -151,22 +151,24 @@ export const messageToUpdateTheTicket = async (req: Request, res: Response) => {
         };
       } else {
         const data = await suggestChatCompletion([message]);
-        const dataFormated = JSON.parse(data);
-        console.log(dataFormated['options']);
+        // const dataFormated = JSON.parse(data);
+        // console.log(dataFormated['options']);
         newSuggests = {
-          options: dataFormated?.options,
-          suggests: dataFormated?.suggests,
+          options: data?.options,
+          suggests: data?.suggests,
         };
       }
     }
     console.log(newSuggests);
-    const newChat = [...(current_ticket?.chat.messages || [])];
+    const newChat = [...(current_ticket?.chat?.messages || [])];
     newChat.push(message);
+    console.log(newChat);
     const newData = await Ticket.findByIdAndUpdate(
       current_ticket?.id,
-      { chat: { messages: newChat, suggests: newSuggests } },
+      { chat: { messages: newChat, suggest: newSuggests } },
       { new: true },
     );
+
     res.status(200).json(newData);
   } catch (e) {
     console.log(e);
