@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 // import * as mongoose from 'mongoose';
 import { z } from 'zod';
 
+import { createNameTicket } from '../forms/controller.openai';
 import Ticket from './model';
 
 export const USER_ROLES = {
@@ -16,20 +17,15 @@ const ticketSchema = z.object({
 });
 
 export const createTicket = async (req: Request, res: Response) => {
-  // const { initialContext } = req.body as ITicket;
-
-  // lewis castillo
-  const userOne = '64ea3d4f4870ff7f457627d7';
+  const { problemByUser } = req.body;
 
   try {
-    // const findTicket = await ticket.findOne({ email });
-    // if (findUser) {
-    //   return res.status(400).json({ message: 'Este email ya existe' });
-    // }
-
+    const reason = await createNameTicket({
+      content: problemByUser,
+    });
     const validatedData = ticketSchema.parse(req.body);
 
-    const newTicket = await Ticket.create({ ...validatedData });
+    const newTicket = await Ticket.create({ ...validatedData, reason });
 
     res.status(201).json({ message: 'Ticket creado con éxito', ticket: newTicket });
   } catch (error) {

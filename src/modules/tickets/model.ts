@@ -27,6 +27,9 @@ const TicketSchema = new mongoose.Schema(
       type: Array<Message>,
     },
     number: { type: Number, unique: true, default: 0 },
+    reason: {
+      type: String,
+    },
   },
   {
     versionKey: false,
