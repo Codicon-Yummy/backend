@@ -117,7 +117,7 @@ export const getChats = async (req: Request, res: Response) => {
     const { ticketNumber } = req.params;
     const response = await Ticket.find();
 
-    const chats = response.filter((ticket) => ticket.chat.messages.length > 0);
+    const chats = response.filter((ticket) => ticket.chat?.messages?.length > 0);
 
     // const chatsFiltered = chats.filter((chat) => );
 
