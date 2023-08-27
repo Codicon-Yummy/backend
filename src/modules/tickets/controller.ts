@@ -115,9 +115,10 @@ export const updateChatByTicketNumber = async (req: Request, res: Response) => {
 export const getChats = async (req: Request, res: Response) => {
   try {
     const { ticketNumber } = req.params;
-    const response = await Ticket.find();
+    const response = await Ticket.findOne({ number: Number(ticketNumber) });
+    // const response = await Ticket.find();
 
-    const chats = response.filter((ticket) => ticket.chat?.messages.length > 0);
+    const chats = response?.chat;
 
     // const chatsFiltered = chats.filter((chat) => );
 
@@ -143,16 +144,13 @@ export const messageToUpdateTheTicket = async (req: Request, res: Response) => {
 
     if (senderBy === 'client') {
       if (current_ticket?.chat?.messages) {
-        const data = await suggestChatCompletion(current_ticket?.chat.messages);
-        const dataFormated = JSON.parse(data);
+        const data = await suggestChatCompletion([message]);
         newSuggests = {
-          options: dataFormated?.options,
-          suggests: dataFormated?.suggests,
+          options: data?.options,
+          suggests: data?.suggests,
         };
       } else {
         const data = await suggestChatCompletion([message]);
-        // const dataFormated = JSON.parse(data);
-        // console.log(dataFormated['options']);
         newSuggests = {
           options: data?.options,
           suggests: data?.suggests,
