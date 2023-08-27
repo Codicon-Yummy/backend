@@ -33,8 +33,8 @@ Gravedad alta:
 
 Los siguientes mensajes que vas a recibir son especificando el cliente y el personal de atencion al cliente de la siguiente forma:
 
-Cliente: mensaje
-Atencion: mensaje
+client: mensaje
+customerService: mensaje
 
 Ten encuenta las respuesta de cada rol para ofrecer una sugerencia.
 
@@ -42,7 +42,7 @@ El formato de respuesta será un json que contemple 2 soluciones o respuestas ac
 
 {
 options: [] ,
-suggests: [] 
+suggests: []
 }`;
 
 // const COMPLEMENT_PROMPT_SOLUTIONS = `Adicional, al momento de proponer solución ten encuenta las siguientes opciones según la gravedad del ticket

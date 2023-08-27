@@ -7,9 +7,14 @@ export type Message = {
   createAt: Date;
 };
 
+export type SuggestIA = {
+  options: string[];
+  suggests: string[];
+};
+
 export interface ITicket extends mongoose.Document {
   initialContext: string;
-  chat: Message[];
+  chat: { messages: Message[]; suggest: SuggestIA };
   status: 'open' | 'pending' | 'resolved';
   number: number;
 }

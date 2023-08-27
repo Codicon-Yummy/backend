@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { z } from 'zod';
 
 import { createNameTicket } from '../forms/controller.openai';
+import { suggestChatCompletion } from '../forms/service.openai';
 import Ticket, { Message } from './model';
 
 export const USER_ROLES = {
@@ -116,7 +117,7 @@ export const getChats = async (req: Request, res: Response) => {
     const { ticketNumber } = req.params;
     const response = await Ticket.find();
 
-    const chats = response.filter((ticket) => ticket.chat.length > 0);
+    const chats = response.filter((ticket) => ticket.chat.messages.length > 0);
 
     // const chatsFiltered = chats.filter((chat) => );
 
@@ -138,10 +139,34 @@ export const messageToUpdateTheTicket = async (req: Request, res: Response) => {
       content: content,
       createAt: new Date(),
     };
+    let newSuggests = current_ticket?.chat.suggest;
 
-    const newChat = [...(current_ticket?.chat || [])];
+    if (senderBy === 'client') {
+      if (current_ticket?.chat.messages) {
+        const data = await suggestChatCompletion(current_ticket?.chat.messages);
+        const dataFormated = JSON.parse(data);
+        newSuggests = {
+          options: dataFormated?.options,
+          suggests: dataFormated?.suggests,
+        };
+      } else {
+        const data = await suggestChatCompletion([message]);
+        const dataFormated = JSON.parse(data);
+        console.log(dataFormated['options']);
+        newSuggests = {
+          options: dataFormated?.options,
+          suggests: dataFormated?.suggests,
+        };
+      }
+    }
+    console.log(newSuggests);
+    const newChat = [...(current_ticket?.chat.messages || [])];
     newChat.push(message);
-    const newData = await Ticket.findByIdAndUpdate(current_ticket?.id, { chat: newChat }, { new: true });
+    const newData = await Ticket.findByIdAndUpdate(
+      current_ticket?.id,
+      { chat: { messages: newChat, suggests: newSuggests } },
+      { new: true },
+    );
     res.status(200).json(newData);
   } catch (e) {
     console.log(e);

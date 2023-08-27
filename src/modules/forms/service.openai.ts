@@ -1,7 +1,8 @@
 import dotenv from 'dotenv';
-import { Configuration, OpenAIApi } from 'openai';
+import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from 'openai';
 import process from 'process';
 
+import { Message } from '../tickets/model';
 import { INITIAL_PROMPT } from '../utils/const';
 import { IForm } from './model';
 
@@ -55,6 +56,40 @@ export const createChatCompletion = async ({ content }: { content: string }) => 
     })
     .then((response) => {
       return response?.data?.choices[0]?.message?.content ?? '';
+    })
+    .catch((e) => {
+      throw e;
+    });
+};
+
+export const suggestChatCompletion = async (messages: Message[]) => {
+  const messagesFormated: ChatCompletionRequestMessage[] = messages.map((message) => {
+    return {
+      role: 'user',
+      content: `${message.senderBy}: ${message.content}`,
+    };
+  });
+  return openai
+    .createChatCompletion({
+      model: 'gpt-4-0613',
+      messages: [
+        {
+          role: 'user',
+          content: INITIAL_PROMPT,
+        },
+        ...messagesFormated,
+      ],
+      temperature: 0.7,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+      // TODO: uncomment this
+      // stream: true,
+      n: 1,
+    })
+    .then((response) => {
+      // console.log(response?.data?.choices[0]?.message?.content?.options);
+      return JSON.stringify(response?.data?.choices[0]?.message?.content) ?? '';
     })
     .catch((e) => {
       throw e;
