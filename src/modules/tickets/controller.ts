@@ -130,3 +130,19 @@ export const getChats = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Something went wrong' });
   }
 };
+
+export const messageToUpdateTheTicket = async (req: Request, res: Response) => {
+  try {
+    const { ticketNumber } = req.params;
+    const response = await Ticket.find();
+
+    const chat = response.filter((ticket) => ticket.number === Number(ticketNumber));
+
+    // const chatsFiltered = chats.filter((chat) => );
+
+    res.status(200).json(chat);
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ message: 'Something went wrong' });
+  }
+};

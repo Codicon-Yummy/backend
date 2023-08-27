@@ -2,8 +2,9 @@ import * as mongoose from 'mongoose';
 import { Model } from 'mongoose';
 
 type Message = {
-  sender: string;
+  senderBy: 'client' | 'customerService';
   content: string;
+  createAt: Date;
 };
 
 export interface ITicket extends mongoose.Document {
