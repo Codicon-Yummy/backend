@@ -1,6 +1,14 @@
 import { Router } from 'express';
 
-import { createTicket, getChats, getTicket, getTickets, messageToUpdateTheTicket, updateTicket } from './controller';
+import {
+  closeTicket,
+  createTicket,
+  getChats,
+  getTicket,
+  getTickets,
+  messageToUpdateTheTicket,
+  updateTicket,
+} from './controller';
 
 const router = Router();
 
@@ -14,7 +22,7 @@ router.put('/:id', updateTicket);
 
 router.post('/:ticketNumber/messages', messageToUpdateTheTicket);
 
-router.put('/:id/close', updateTicket);
+router.put('/:ticketNumber/close', closeTicket);
 
 router.get('/:ticketNumber/chats', getChats);
 

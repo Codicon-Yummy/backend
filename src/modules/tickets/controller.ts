@@ -148,3 +148,14 @@ export const messageToUpdateTheTicket = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Something went wrong' });
   }
 };
+
+export const closeTicket = async (req: Request, res: Response) => {
+  try {
+    const { ticketNumber } = req.params;
+    const current_ticket = await Ticket.findOne({ number: Number(ticketNumber) });
+    const newData = await Ticket.findByIdAndUpdate(current_ticket?.id, { status: 'resolved' }, { new: true });
+    res.status(200).json(newData);
+  } catch (e) {
+    res.status(500).json({ message: 'Something went wrong' });
+  }
+};
