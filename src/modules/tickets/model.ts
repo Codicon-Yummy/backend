@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 import { Model } from 'mongoose';
 
-type Message = {
+export type Message = {
   senderBy: 'client' | 'customerService';
   content: string;
   createAt: Date;

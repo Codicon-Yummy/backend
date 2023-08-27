@@ -34,7 +34,7 @@ export const createContent = (data: IForm) => {
 export const createChatCompletion = async ({ content }: { content: string }) => {
   return openai
     .createChatCompletion({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4-0613',
       messages: [
         {
           role: 'assistant',

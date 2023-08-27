@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { z } from 'zod';
 
 import { createNameTicket } from '../forms/controller.openai';
-import Ticket from './model';
+import Ticket, { Message } from './model';
 
 export const USER_ROLES = {
   ADMIN: 'admin',
@@ -130,13 +130,19 @@ export const getChats = async (req: Request, res: Response) => {
 export const messageToUpdateTheTicket = async (req: Request, res: Response) => {
   try {
     const { ticketNumber } = req.params;
-    const response = await Ticket.find();
+    const { senderBy, content } = req.body;
+    const current_ticket = await Ticket.findOne({ number: Number(ticketNumber) });
 
-    const chat = response.filter((ticket) => ticket.number === Number(ticketNumber));
+    const message: Message = {
+      senderBy: senderBy,
+      content: content,
+      createAt: new Date(),
+    };
 
-    // const chatsFiltered = chats.filter((chat) => );
-
-    res.status(200).json(chat);
+    const newChat = [...(current_ticket?.chat || [])];
+    newChat.push(message);
+    const newData = await Ticket.findByIdAndUpdate(current_ticket?.id, { chat: newChat }, { new: true });
+    res.status(200).json(newData);
   } catch (e) {
     console.log(e);
     res.status(500).json({ message: 'Something went wrong' });
