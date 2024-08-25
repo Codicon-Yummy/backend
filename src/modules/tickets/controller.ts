@@ -2,9 +2,10 @@ import { Request, Response } from 'express';
 // import * as mongoose from 'mongoose';
 import { z } from 'zod';
 
-import { createNameTicket } from '../forms/controller.openai';
+import { createNameTicket, getUserAnalysis } from '../forms/controller.openai';
 import { suggestChatCompletion } from '../forms/service.openai';
-import Ticket, { Message } from './model';
+import { LIST_TICKETS_ORDERS_WITH_ERRORS, LIST_USERS } from '../utils/const';
+import Ticket, { Message, SuggestIA } from './model';
 
 export const USER_ROLES = {
   ADMIN: 'admin',
@@ -18,7 +19,7 @@ const ticketSchema = z.object({
 });
 
 export const createTicket = async (req: Request, res: Response) => {
-  const { problemByUser } = req.body;
+  const { problemByUser, userId } = req.body;
 
   try {
     const reason = await createNameTicket({
@@ -26,7 +27,27 @@ export const createTicket = async (req: Request, res: Response) => {
     });
     const validatedData = ticketSchema.parse(req.body);
 
-    const newTicket = await Ticket.create({ ...validatedData, reason });
+    const chat = {
+      messages: [
+        {
+          senderBy: 'client',
+          content: problemByUser,
+          createAt: new Date(),
+        },
+      ] as Message[],
+      suggest: [] as SuggestIA[],
+    };
+
+    const data = await suggestChatCompletion(chat.messages);
+    const newSuggests: SuggestIA = {
+      options: data?.options,
+      suggests: data?.suggests,
+    };
+
+    // @ts-ignore
+    chat.suggest = newSuggests;
+
+    const newTicket = await Ticket.create({ ...validatedData, reason, chat, userId });
 
     res.status(201).json({ message: 'Ticket creado con éxito', ticket: newTicket });
   } catch (error) {
@@ -47,7 +68,15 @@ export const getTicket = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Ticket not found' });
     }
 
-    res.status(200).json(findTicket);
+    const newData = {
+      ...findTicket,
+      user: LIST_USERS.find((user) => user.id === findTicket.userId) ?? {
+        id: 0,
+        fullName: 'No user',
+      },
+    };
+
+    res.status(200).json(newData);
   } catch (e) {
     res.status(500).json({ message: 'Something went wrong' });
   }
@@ -116,11 +145,14 @@ export const getChats = async (req: Request, res: Response) => {
   try {
     const { ticketNumber } = req.params;
     const response = await Ticket.findOne({ number: Number(ticketNumber) });
-    // const response = await Ticket.find();
 
-    const chats = response?.chat;
-
-    // const chatsFiltered = chats.filter((chat) => );
+    const chats = {
+      ...response?.chat,
+      user: LIST_USERS.find((user) => user.id === response?.userId) ?? {
+        id: 0,
+        fullName: 'No user',
+      },
+    };
 
     res.status(200).json(chats);
   } catch (e) {

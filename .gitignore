@@ -106,12 +106,12 @@ dist
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
-yarn.lock
-package-lock.json
+#yarn.lock
+#package-lock.json
 build
 .idea
 *.sh
-yarn.lock
-package-lock.json
+#yarn.lock
+#package-lock.json
 *.http
 #src/modules/consumption-range/

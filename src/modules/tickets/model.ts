@@ -18,6 +18,7 @@ export type Chat = {
 };
 
 export interface ITicket extends mongoose.Document {
+  userId: number;
   initialContext: string;
   chat: { messages: Message[]; suggest: SuggestIA };
   status: 'open' | 'pending' | 'resolved';
@@ -65,6 +66,9 @@ const TicketSchema = new mongoose.Schema(
     reason: {
       type: String,
     },
+    userId: {
+      type: Number,
+    }
   },
   {
     versionKey: false,

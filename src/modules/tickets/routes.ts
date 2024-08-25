@@ -26,4 +26,6 @@ router.put('/:ticketNumber/close', closeTicket);
 
 router.get('/:ticketNumber/chats', getChats);
 
+// router.post('/delete-test', deleteTicketsWithoutChats);
+
 export default router;

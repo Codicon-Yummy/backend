@@ -39,7 +39,7 @@ customerService: mensaje
 Ten encuenta las respuesta de cada rol para ofrecer una sugerencia.
 
 El formato de respuesta será un json que pueda aplicarle JSON.parser() que contemple 2 soluciones o respuestas acorde a los mensajes del cliente en menos de 60 caracteres, y una sugerencia de respuesta que esta alineada a los valores de la empresa, de esta forma:
-
+No respondas como client: mensaje o customerService: mensaje, únicamente el siguiente formato
 {
   "options": [] ,
   "suggests": []
@@ -52,3 +52,27 @@ El formato de respuesta será un json que pueda aplicarle JSON.parser() que cont
 // Cupon para tu próxima compra: Cupon entre 1$ y 3$
 // Oportunidad de mejora: la mejor opcion es proponer mejorar para la proxima vez
 // `;
+
+export const LIST_TICKETS_ORDERS_WITH_ERRORS = [
+  'Ticket #101: Mi pedido de comida llegó frío.',
+  'Ticket #102: El tiempo estimado de entrega cambió múltiples veces durante la espera.',
+  'Ticket #103: El repartidor no encontró mi dirección y no me llamó para pedir indicaciones.',
+  'Ticket #104: La aplicación me cobró dos veces por el mismo pedido.',
+  'Ticket #105: Los elementos de mi pedido faltan o están equivocados.',
+  'Ticket #106: No puedo agregar mi dirección correctamente en la aplicación.',
+  'Ticket #107: La opción para rastrear a mi repartidor en tiempo real no funciona.',
+  'Ticket #108: Intenté cancelar mi pedido dentro de los primeros 5 minutos, pero la aplicación no me dejó.',
+  'Ticket #109: El repartidor no siguió las instrucciones especiales que proporcioné.',
+  'Ticket #110: No recibí un recibo o factura de mi pedido.',
+];
+
+export const LIST_USERS = [
+  {
+    id: 1,
+    fullName: 'Carl Lewis',
+  },
+  {
+    id: 2,
+    fullName: 'Ehiber Graterol',
+  },
+];

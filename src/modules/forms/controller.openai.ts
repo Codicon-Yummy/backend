@@ -69,3 +69,32 @@ export const createNameTicket = async ({ content }: { content: string }) => {
       throw e;
     });
 };
+
+//
+export const getUserAnalysis = async ({ content }: { content: any }) => {
+  return openai
+    .createChatCompletion({
+      messages: [
+        {
+          role: 'system',
+          content: `
+          Dado que el usuario ha reportado múltiples problemas con la aplicación de delivery, incluyendo: pedidos fríos, cambios en el tiempo estimado de entrega, problemas con la dirección, cobros dobles, pedidos incorrectos, problemas al añadir direcciones, falta de rastreo en tiempo real, problemas con la cancelación, y falta de seguimiento a instrucciones especiales, ¿cuál es el contexto general o tema principal de sus inquietudes?
+
+El contexto general de las inquietudes del usuario se centra en deficiencias operativas y técnicas de la aplicación de delivery. Sus problemas varían desde la calidad y exactitud de los pedidos hasta problemas técnicos con la plataforma, lo que sugiere un área de mejora tanto en la interfaz del usuario como en la logística del servicio de delivery.
+        `,
+        },
+        {
+          role: 'assistant',
+          content: 'Estos son los ultimos tickets que se han reportado en la plataforma por el cliente' + content,
+        },
+      ],
+      model: 'gpt-3.5-turbo',
+      max_tokens: 80,
+    })
+    .then((response) => {
+      return response?.data?.choices[0]?.message?.content ?? '';
+    })
+    .catch((e) => {
+      throw e;
+    });
+};
